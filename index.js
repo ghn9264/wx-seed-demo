@@ -19,11 +19,11 @@ router.all('/wechat', wechat(conf).middleware(
     }
 ))
 
-const tokenCache = {
-    access_token: '',
-    updateTime: Date.now(),
-    expires_in: 7200
-}
+// const tokenCache = {
+//     access_token: '',
+//     updateTime: Date.now(),
+//     expires_in: 7200
+// }
 // const wxDomain = `https://api.weixin.qq.com`
 // router.get('/getToken', async ctx => {
 //     console.log('..getToken')
@@ -43,7 +43,7 @@ const tokenCache = {
 //     console.log('getFollowers', res.data)
 //     ctx.body = res.data
 // })
-//const {ServerToken}  = require('./mongoose')
+const {ServerToken}  = require('./mongoose')
 const WechatAPI = require('co-wechat-api')
 const api = new WechatAPI(conf.appid, conf.appsecret,
     async function () {
