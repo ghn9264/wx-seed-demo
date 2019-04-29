@@ -21,6 +21,8 @@
         <cube-input v-model="value"></cube-input>
         <cube-button @click='getTokens'>getTokens</cube-button>
         <cube-button @click='getFollowers'>getFollowers</cube-button>
+        <cube-button @click='auth'>微信登录</cube-button>
+        <cube-button @click='getUser'>获取用户信息</cube-button>
 
     </div>
     <script>
@@ -40,6 +42,18 @@
                     console.log('getFollowers')
                     let res = await axios.get('/getFollowers')
                     console.log('res',res)
+                },
+                async auth(){
+                    window.location.href='/wxAuthorize'
+                },
+                async getUser(){
+                    const qs = Qs.parse(window.location.search.substr(1))
+                    const openid = qs.openid
+                    const res = await axios.get('/getUser',{
+                        params:{
+                            openid:openid
+                        }
+                    })
                 }
             },
             mounted: function () {

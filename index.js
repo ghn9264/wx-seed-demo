@@ -62,6 +62,38 @@ router.get('/getFollowers', async ctx => {
     ctx.body = res
 })
 
+const Oauth = require('co-wechat-oauth')
+const oauth = new Oauth(conf.appid,conf.appsecret)
+router.get('/wxAuthorize',async ctx =>{
+    const state = ctx.query.id
+    redirectUrl = ctx.href
+    redirectUrl = redirectUrl.replace('wxAuthorize','wxCallback')
+    const scope = 'snsapi_userinfo'
+    const url = oauth.getAuthorizeURL(redirectUrl,state,scope)
+    console.log(url);
+    
+    ctx.redirect(url)
+})
+
+router.get('/wxCallback',async ctx=>{
+    const code = ctx.query.code
+    console.log('back:'+code);
+    const token = await oauth.getAccessToken(code)  
+    const accessToken = token.data.access_token
+    const openid = token.data.openid
+    console.log('accessToken',accessToken);
+    console.log('openid',openid);
+    ctx.redirect('./?openid='+openid)
+    
+    
+})
+
+router.get('/getUser',async ctx=>{
+    const openid = ctx.query.openid
+    const userInfo = await oauth.getUser(openid)
+    ctx.body = userInfo
+})
+
 app.use(router.routes()); /*启动路由*/
 app.use(router.allowedMethods());
 app.listen(3000);
